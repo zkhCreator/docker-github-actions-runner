@@ -2,8 +2,13 @@ name: Build and Push Runner
 
 on:
   schedule:
-    - cron: "0 2 * * *" # 每天凌晨2点检查更新
+    - cron: "0 18 * * *"   # 北京时间 02:00
   workflow_dispatch:
+
+env:
+  REGISTRY: ${{ secrets.TCR_REGISTRY }}   # 比如 uswccr.ccs.tencentyun.com
+  IMAGE_NAME: github-runner
+  NAMESPACE: your-namespace
 
 jobs:
   build:
@@ -18,15 +23,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to DockerHub
+      - name: Login to Registry
         uses: docker/login-action@v3
         with:
-          registry: uswccr.ccs.tencentyun.com
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.TCR_USERNAME }}
+          password: ${{ secrets.TCR_PASSWORD }}
 
       - name: Build and Push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: sparky/github-runner:latest
+          tags: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
