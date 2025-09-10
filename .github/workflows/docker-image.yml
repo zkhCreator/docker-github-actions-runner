@@ -2,13 +2,13 @@ name: Build and Push Runner
 
 on:
   schedule:
-    - cron: "0 18 * * *"   # 北京时间 02:00
+    - cron: "0 18 * * *"
   workflow_dispatch:
 
 env:
-  REGISTRY: ${{ secrets.TCR_REGISTRY }}   # 比如 uswccr.ccs.tencentyun.com
+  REGISTRY: ${{ secrets.TCR_REGISTRY }}
   IMAGE_NAME: github-runner
-  NAMESPACE: your-namespace
+  NAMESPACE: ${{ secrets.NAMESPACE }}
 
 jobs:
   build:
